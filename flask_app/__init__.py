@@ -17,9 +17,10 @@ import certifi
 from datetime import datetime
 import os
 
-MONGO_HOST = os.environ.get('MONGO_HOST')
-SECRET_KEY = os.environ.get('SECRET_KEY')
-GOOGLE_KEY = os.environ.get('GOOGLE_API')
+# Environment variables
+MONGO_HOST = os.getenv("MONGO_HOST")
+SECRET_KEY = os.getenv("SECRET_KEY")
+GOOGLE_KEY = os.getenv("GOOGLE_API")
 
 # import google api library
 from .client import GoogleClient
