@@ -48,13 +48,15 @@ def create_app(test_config=None):
     }
 
     db.init_app(app)
-    login_manager.init_app(app)
+    # uncomment when doing login stuff
+    #login_manager.init_app(app)
     bcrypt.init_app(app)
 
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_error_handler(404, custom_404)
 
-    login_manager.login_view = "users.login"
+    # uncomment when doing login stuff
+    # login_manager.login_view = "users.login"
 
     return app
