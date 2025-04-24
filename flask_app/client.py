@@ -9,9 +9,5 @@ class GoogleClient(object):
         return self.key
     
     def geocode(self, location):
-<<<<<<< Updated upstream
-        self.gmaps.geocode(location)[0]['geometry']['location']
-=======
         loc = self.gmaps.geocode(location)[0]['geometry']['location']
         return [loc['lat'], loc['lng']]
->>>>>>> Stashed changes
