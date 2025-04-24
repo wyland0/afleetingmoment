@@ -32,7 +32,7 @@ bcrypt = Bcrypt()
 google_client = GoogleClient(GOOGLE_KEY)
 
 from .users.routes import users
-from .posts.routes import posts
+from .moments.routes import moments
 
 def custom_404(e):
     return render_template("404.html"), 404
@@ -54,7 +54,7 @@ def create_app(test_config=None):
     bcrypt.init_app(app)
 
     app.register_blueprint(users)
-    app.register_blueprint(posts)
+    app.register_blueprint(moments)
     app.register_error_handler(404, custom_404)
 
     # uncomment when doing login stuff
