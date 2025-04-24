@@ -1,11 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>A Fleeting Moment</title>
-    </head>
-    <body>
-        <h1>test test test</h1>
-    </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fleeting Moments</title>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoegfdWeRdN9Pi05getqVkkCy6UAMPcVw&callback=console.debug&libraries=maps,marker&v=beta">
+  </script>
+  <link rel="stylesheet" href="/flask_app/static/style.css"/>
+</head>
+<body>
+
+  <h1>Fleeting Moments</h1>
+  <gmp-map center="40.12150192260742,-100.45039367675781" zoom="4" map-id="DEMO_MAP_ID">
+    <gmp-advanced-marker position="40.12150192260742,-100.45039367675781" title="My location"></gmp-advanced-marker>
+
+    <gmp-advanced-marker position="46.12150192260742,-100.45039367675781" title="My location"></gmp-advanced-marker>
+  </gmp-map>
+
+  <form class="search-bar" action="/search" method="GET">
+    <input class="search-input" type="text" name="search" placeholder="Search for a location">
+    <input class="submit-button" type="submit" value="Search">
+  </form>
+
+  <div class="search-results">
+    <div class="result-item"  onclick="window.location.href='/comment?id=1234567890'">
+      <p class="post-id">Id: 1234567890</p>
+      <p>This is an example post.</p>
+    </div>
+  </div>
+
+  <div class="post-form">
+    <form action="\createpost" method="GET">
+      <input class="submit-button" type="submit" value="Create a post!">
+      
+    </form>
+
+</body>
 </html>
+
