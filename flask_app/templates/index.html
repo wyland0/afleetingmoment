@@ -22,15 +22,16 @@
 
   <div class="search-results">
 
-    {{for moment in moments}}
+    {% for moment in moments %}
       <div class="result-item"  onclick="window.location.href='/comment?id={{moment.id}}'">
         <p class="post-id">Id: {{moment.id}}</p>
         <p>{{moment.description}}</p>
       </div>
+    {% endfor %}
   </div>
 
   <div class="post-form">
-    <form action="\createpost" method="GET">
+    <form action="\createmoment" method="GET">
       <input class="submit-button" type="submit" value="Create a post!">
       
     </form>
