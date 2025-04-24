@@ -10,4 +10,4 @@ class GoogleClient(object):
     
     def geocode(self, location):
         loc = self.gmaps.geocode(location)[0]['geometry']['location']
-        return (loc['lat'], loc['lng'])
+        return [loc['lat'], loc['lng']]
