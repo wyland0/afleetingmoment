@@ -8,4 +8,14 @@ moments = Blueprint("moments", __name__)
 
 @moments.route("/")
 def index():
-    return render_template("index.html", key=google_client.getKey())
+
+    moments = []
+
+    # dummies
+    for i in range(10):
+        moments.append({
+            "id": i,
+            "description": f"Moment {i}",
+        })
+
+    return render_template("index.html", key=google_client.getKey(), moments=moments)
