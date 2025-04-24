@@ -32,7 +32,7 @@ bcrypt = Bcrypt()
 google_client = GoogleClient(GOOGLE_KEY)
 
 from .users.routes import users
-from .posts.routes import posts
+from .moments.routes import moments
 
 def custom_404(e):
     return render_template("404.html"), 404
