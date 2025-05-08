@@ -21,6 +21,8 @@ import os
 MONGO_HOST = os.getenv("MONGO_HOST")
 SECRET_KEY = os.getenv("SECRET_KEY")
 GOOGLE_KEY = os.getenv("GOOGLE_API")
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 
 # import google api library
 from .client import GoogleClient
@@ -47,6 +49,9 @@ def create_app(test_config=None):
         'host': MONGO_HOST,
         'tlsCAFile': certifi.where()
     }
+    
+    # Set the secret key properly
+    app.config['SECRET_KEY'] = SECRET_KEY
 
     db.init_app(app)
     # uncomment when doing login stuff
