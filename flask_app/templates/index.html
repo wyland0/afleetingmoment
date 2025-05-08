@@ -10,9 +10,11 @@
 </head>
 <body>
   <gmp-map center="40.12150192260742,-100.45039367675781" zoom="4" map-id="DEMO_MAP_ID">
-    <gmp-advanced-marker position="40.12150192260742,-100.45039367675781" title="My location"></gmp-advanced-marker>
-
-    <gmp-advanced-marker position="46.12150192260742,-100.45039367675781" title="My location"></gmp-advanced-marker>
+    {% for moment in moments %}
+      {% if moment.lat and moment.lng %}
+        <gmp-advanced-marker position="{{moment.lat}},{{moment.lng}}" title="{{moment.content}}"></gmp-advanced-marker>
+      {% endif %}
+    {% endfor %}
   </gmp-map>
 
   <form class="search-bar" action="/search" method="GET">
@@ -23,17 +25,22 @@
   <div class="search-results">
 
     {% for moment in moments %}
-      <div class="result-item"  onclick="window.location.href='/comment?id={{moment.id}}'">
-        <p class="post-id">Id: {{moment.id}}</p>
-        <p>{{moment.description}}</p>
+      <div class="result-item" onclick="window.location.href='/moment/{{moment.id}}'">
+        
+        <p>Id: {{moment.id}}</p>
+        {% if moment.addressed and moment.addressed|length > 0 %}
+          <p>Addressed: {{moment.addressed}}</p>
+        {% endif %}
+        <p>{{moment.username if moment.username else ''}}</p>
+        <p>{{moment.content}}</p>
+        <p>{{moment.time}}</p>        
       </div>
     {% endfor %}
   </div>
 
-  <div class="post-form">
-    <form action="\createmoment" method="GET">
-      <input class="submit-button" type="submit" value="Create a post!">
-      
+  <div class="post-form" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <form action="/createmoment" method="GET">
+      <input class="submit-button" type="submit" value="Create a post!" style="box-shadow: 0 4px 8px rgba(0,0,0,0.2); font-weight: bold;">
     </form>
   </div>
 

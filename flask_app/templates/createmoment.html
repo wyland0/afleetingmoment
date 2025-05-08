@@ -4,28 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Share Your Fleeting Moments</title>
-  <link rel="stylesheet" href="/flask_app/static/style.css"/>
+  <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}"/>
 </head>
 <body>
 
   <h1>Fleeting Moments</h1>
 
-  <form action="/createpost" method="POST">
+  <form action="/createmoment" method="POST">
     <label for="description">Description:</label>
     <textarea id="description" name="description" required></textarea>
 
     <label for="location">Location:</label>
     <input type="text" id="location" name="location" required>
-
+    
     <div class="checkbox-container">
         <input type="checkbox" id="public" name="public" value="true" checked>
         <label for="public">Post publicly</label>
     </div>
 
+    <label for="addressed_to">Addressed To:</label>
+    <input type="text" id="addressed_to" name="addressed_to" placeholder="Who is this addressed to?">
+
     <input type="submit" value="Create Post">
-
-
-
   </form>
 
 </body>

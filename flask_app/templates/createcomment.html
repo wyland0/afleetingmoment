@@ -8,25 +8,39 @@
 </head>
 <body>
 
-  <h1>Fleeting Moments</h1>
+  <h1>Fleeting Comments?!</h1>
 
-  <form action="/comment/{{id}}" method="POST">
-    <label for="description">Comment:</label>
-    <textarea id="description" name="description" required></textarea>
+  <div class="moment-focus">
+    <div class="result-item" onclick="window.location.href='/moment/{{moment.id}}'">
+      <p>Id: {{moment.id}}</p>
+      {% if moment.addressed_to %}
+        <p>Addressed to: {{moment.addressed_to}}</p>
+      {% endif %}
+      <p>{{moment.content}}</p>
+      {% if moment.username %}
+        <p>By: {{moment.username}}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <form action="/comment/{{moment.id}}" method="POST">
+    <label for="content">Comment:</label>
+    <textarea id="content" name="content" required></textarea>
 
     <div class="checkbox-container">
         <input type="checkbox" id="public" name="public" value="true" checked>
         <label for="public">Post publicly</label>
     </div>
 
-    <input type="submit" value="Create Post">
+    <input type="submit" value="Post Comment">
     <div class="comment-results">
-
     {% for comment in comments %}
       <div class="comment-item">
         <p class="post-id">Id: {{comment.id}}</p>
         <p>{{comment.content}}</p>
-        <p>{{comment.username if comment.username else ''}}</p>
+        {% if comment.username %}
+          <p>By: {{comment.username}}</p>
+        {% endif %}
         <p>{{comment.time}}</p>
       </div>
     {% endfor %}  

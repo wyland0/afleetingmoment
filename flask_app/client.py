@@ -9,5 +9,12 @@ class GoogleClient(object):
         return self.key
     
     def geocode(self, location):
-        loc = self.gmaps.geocode(location)[0]['geometry']['location']
-        return [loc['lat'], loc['lng']]
+        try:
+            result = self.gmaps.geocode(location)
+            if result and len(result) > 0:
+                return result[0]['geometry']['location']
+            else:
+                return {'lat': 0.0, 'lng': 0.0}
+        except Exception as e:
+            print(f"Error geocoding location: {e}")
+            return {'lat': 0.0, 'lng': 0.0}
