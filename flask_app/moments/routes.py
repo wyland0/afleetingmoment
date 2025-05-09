@@ -3,13 +3,18 @@ from io import BytesIO
 from flask import Blueprint, render_template, url_for, redirect, request, flash
 from mongoengine.queryset.visitor import Q
 from flask_login import current_user
+
 from .. import google_client, db
-from datetime import datetime
+from ..forms import LocationSearchForm
 from ..models import Moment, Comment
+from datetime import datetime
+
+
 moments = Blueprint("moments", __name__)
 
-@moments.route("/")
+@moments.route("/", methods=["GET"])
 def index():
+
     db_moments = Moment.objects.order_by('-created_at')
     
     # Format moments for template
@@ -25,7 +30,11 @@ def index():
             'time': moment.created_at.strftime("%Y-%m-%d %H:%M")
         })
     
-    return render_template("index.html", key=google_client.getKey(), moments=formatted_moments)
+    # Ryan added
+    form = LocationSearchForm()
+    
+    # Ryan added form=form
+    return render_template("index.html", key=google_client.getKey(), moments=formatted_moments, form=form)
 
 @moments.route("/createmoment", methods=["POST", "GET"])
 def create_moment():
@@ -122,14 +131,15 @@ def post_comment(id):
     
 @moments.route("/search", methods=["GET"])
 def search():
-    query = request.args.get('search')
+
+    query = request.args.get('search_query')
+
     if not query:
         return redirect(url_for('moments.index'))
     
     db_moments = Moment.objects(Q(content__icontains=query) | 
                                 Q(username__icontains=query) | 
-                                Q(addressed_to__icontains=query) | 
-                                Q(id__icontains=query))
+                                Q(addressed_to__icontains=query))
     db_moments = db_moments.order_by('-created_at')
     
     # Format moments for template
@@ -144,5 +154,7 @@ def search():
             'lng': moment.location[1],
             'time': moment.created_at.strftime("%Y-%m-%d %H:%M")
         })
+
+    form = LocationSearchForm()
     
-    return render_template("index.html", key=google_client.getKey(), moments=formatted_moments)
+    return render_template("index.html", key=google_client.getKey(), moments=formatted_moments, form=form)

@@ -17,10 +17,27 @@
     {% endfor %}
   </gmp-map>
 
+  {# Search bar form #}
+  <form class="search-bar" action="/search" method="GET">
+    {{ form.search_query(class="form-control", placeholder="Search for a post") }}
+
+    {% if form.search_query.errors %}
+      <div class="error" role="alert">
+        {% for error in form.search_query.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    {{ form.submit(class="submit-button") }}
+  </form>
+
+  <!-- Testing out code above
   <form class="search-bar" action="/search" method="GET">
     <input class="search-input" type="text" name="search" placeholder="Search for a post">
     <input class="submit-button" type="submit" value="Search">
   </form>
+  -->
 
   <div class="search-results">
 
