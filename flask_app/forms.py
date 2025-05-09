@@ -10,37 +10,25 @@ from wtforms.validators import (
     Email,
     EqualTo,
     ValidationError,
-    Optional,
 )
 
 
 from .models import User
 
 
-class LocationSearchForm(FlaskForm):
+class SearchForm(FlaskForm):
     search_query = StringField(
         "Query", validators=[InputRequired(), Length(min=1, max=100)]
     )
     submit = SubmitField("Search")
 
 
-class MomentForm(FlaskForm):
-    content = TextAreaField(
-        "Content", validators=[InputRequired(), Length(min=5, max=500)]
+class MovieReviewForm(FlaskForm):
+    text = TextAreaField(
+        "Comment", validators=[InputRequired(), Length(min=5, max=500)]
     )
-    location = StringField("Location", validators=[InputRequired(), Length(min=1, max=100)])
-    # for public checkbox, will process accordingly in routes.py, if user not logged in username is empty
-    public = BooleanField("Public")
-    # address to is an optional field
-    addressed_to = StringField("Address To", validators=[Optional(), Length(min=1, max=100)])
-    submit = SubmitField("Create Moment")
-    # no comments or date in the initial create moment form, process in routes.py
+    submit = SubmitField("Enter Comment")
 
-class CommentForm(FlaskForm):
-    comment = TextAreaField("Comment", validators=[])
-    # for public checkbox, will process accordingly in routes.py, if user not logged in username is empty
-    public = BooleanField("Public")
-    submit = SubmitField("Post Comment")
 
 class RegistrationForm(FlaskForm):
     username = StringField(
@@ -64,31 +52,41 @@ class RegistrationForm(FlaskForm):
             raise ValidationError("Email is taken")
 
 
-# TODO: implement fields
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired()])
-    password = PasswordField('Password', validators=[InputRequired()])
-    submit = SubmitField('Login')
+    username = StringField("Username", validators=[InputRequired()])
+    password = PasswordField("Password", validators=[InputRequired()])
+    submit = SubmitField("Login")
 
-'''
-# TODO: implement
+
 class UpdateUsernameForm(FlaskForm):
-    # username = None
-    # submit_username = None 
-    username = StringField('Username', validators=[InputRequired(), Length(min=1, max=40)])
-    submit_username = SubmitField('Update')
+    username = StringField(
+        "Username", validators=[InputRequired(), Length(min=1, max=40)]
+    )
+    submit_username = SubmitField("Update Username")
 
-    # TODO: implement
     def validate_username(self, username):
         user = User.objects(username=username.data).first()
-        if user is not None:
-            raise ValidationError('Username already taken')
+        if user is not None and user.username != current_user.username:
+            raise ValidationError("Username is already taken!")
 
-# TODO: implement
 class UpdateProfilePicForm(FlaskForm):
-    # picture = None
-    # submit_picture = None
-    picture = FileField('Picture', validators=[FileRequired(), FileAllowed(['png', 'jpg'], 'Images Only!')])
-    submit_picture = SubmitField('Update')
-'''
+    picture = FileField(
+        "Profile Picture",
+        validators=[
+            FileRequired(),
+            FileAllowed(["jpg", "png"], "Only jpegs and pngs are accepted"),
+        ],
+    )
+    submit_picture = SubmitField("Update Profile Picture")
 
+class MomentForm(FlaskForm):
+    description = TextAreaField("Description", validators=[InputRequired()])
+    location = StringField("Location", validators=[InputRequired()])
+    public = BooleanField("Post publicly", default=True)
+    addressed_to = StringField("Addressed To")
+    submit = SubmitField("Create Post")
+
+class CommentForm(FlaskForm):
+    content = TextAreaField("Comment", validators=[InputRequired()])
+    public = BooleanField("Post publicly", default=True)
+    submit = SubmitField("Post Comment")
