@@ -1,36 +1,20 @@
 import base64, io
 from io import BytesIO
 from flask import Blueprint, render_template, url_for, redirect, request, flash
+from mongoengine.queryset.visitor import Q
 from flask_login import current_user
+
 from .. import google_client, db
+from ..forms import LocationSearchForm
+from ..models import Moment, Comment
 from datetime import datetime
 
-# Define models directly here as a temporary solution
-class Moment(db.Document):
-    content = db.StringField(required=True)
-    username = db.StringField(required=True)
-    addressed_to = db.StringField()
-    created_at = db.DateTimeField(required=True)
-    location = db.ListField(db.FloatField(), default=[0.0, 0.0])
-    
-    meta = {
-        'indexes': ['-created_at']
-    }
-
-class Comment(db.Document):
-    content = db.StringField(required=True)
-    username = db.StringField(required=True)
-    moment_id = db.StringField(required=True)
-    created_at = db.DateTimeField(required=True)
-    
-    meta = {
-        'indexes': ['-created_at']
-    }
 
 moments = Blueprint("moments", __name__)
 
-@moments.route("/")
+@moments.route("/", methods=["GET"])
 def index():
+
     db_moments = Moment.objects.order_by('-created_at')
     
     # Format moments for template
@@ -46,7 +30,11 @@ def index():
             'time': moment.created_at.strftime("%Y-%m-%d %H:%M")
         })
     
-    return render_template("index.html", key=google_client.getKey(), moments=formatted_moments)
+    # Ryan added
+    form = LocationSearchForm()
+    
+    # Ryan added form=form
+    return render_template("index.html", key=google_client.getKey(), moments=formatted_moments, form=form)
 
 @moments.route("/createmoment", methods=["POST", "GET"])
 def create_moment():
@@ -140,3 +128,33 @@ def post_comment(id):
     except:
         flash('Moment not found', 'danger')
         return redirect(url_for('moments.index'))
+    
+@moments.route("/search", methods=["GET"])
+def search():
+
+    query = request.args.get('search_query')
+
+    if not query:
+        return redirect(url_for('moments.index'))
+    
+    db_moments = Moment.objects(Q(content__icontains=query) | 
+                                Q(username__icontains=query) | 
+                                Q(addressed_to__icontains=query))
+    db_moments = db_moments.order_by('-created_at')
+    
+    # Format moments for template
+    formatted_moments = []
+    for moment in db_moments:
+        formatted_moments.append({
+            'id': str(moment.id),
+            'content': moment.content,
+            'username': moment.username,
+            'addressed': moment.addressed_to,
+            'lat': moment.location[0],
+            'lng': moment.location[1],
+            'time': moment.created_at.strftime("%Y-%m-%d %H:%M")
+        })
+
+    form = LocationSearchForm()
+    
+    return render_template("index.html", key=google_client.getKey(), moments=formatted_moments, form=form)

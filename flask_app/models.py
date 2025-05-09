@@ -1,13 +1,14 @@
 from flask_login import UserMixin
 from . import db, login_manager
+
 from datetime import datetime
 
 class User(db.Document, UserMixin):
-    username = db.StringField(required=True, unique=True)
-    email = db.EmailField(required=True, unique=True)
+    username = db.StringField(unique=True, required=True, min_length=1, max_length=40)
+    email = db.EmailField(unique=True, required=True)
     password = db.StringField(required=True)
+    profile_pic = db.ImageField()
     
-    # Returns unique string identifying our object
     def get_id(self):
         return str(self.id)
 
@@ -21,6 +22,9 @@ class Moment(db.Document):
     meta = {
         'indexes': ['-created_at']
     }
+    
+    def get_id(self):
+        return str(self.id)
 
 class Comment(db.Document):
     content = db.StringField(required=True)
@@ -31,7 +35,12 @@ class Comment(db.Document):
     meta = {
         'indexes': ['-created_at']
     }
+    
+    
+    def get_id(self):
+        return str(self.id)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.objects.get(id=user_id)
+    return User.objects.get(id=user_id).first()
+
